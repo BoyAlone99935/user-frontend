@@ -1,7 +1,9 @@
 import { CalendarDays, MapPin, } from "lucide-react";
 import Ticket from '../assets/ticket.png'
 import Events from "./Events";
+import {useNavigate} from 'react-router-dom'
 const EventCard = ({ event }) => {
+  const navigate = useNavigate()
   const lowestPrice = Math.min(
     ...event.ticketTypes.map(ticket => ticket.price)
   );
@@ -55,7 +57,7 @@ const EventCard = ({ event }) => {
 
           </div>
 
-          <button>
+          <button onClick={() => navigate(`/event/${event._id}/${event.celebrity}`)}>
 
            <img src={Ticket} alt="" style={{width:"20px"}}/>
 

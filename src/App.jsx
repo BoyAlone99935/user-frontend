@@ -4,6 +4,7 @@ import Celebrity from "./Pages/Celebrity";
 import './App.css'
 import './index.css'
 import EventList from "./Pages/EventList";
+import CheckOut from "./Pages/CheckOut";
 function App() {
  
   return (
@@ -14,7 +15,10 @@ function App() {
         path="/celebrity/:slug/events"
         element={<EventList />}
       />
-
+       <Route
+        path="/event/:id/:celebid/"
+        element={<CheckOut/>}
+      />
     </Routes>
   )
 }
