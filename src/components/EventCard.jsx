@@ -1,13 +1,18 @@
 import { CalendarDays, MapPin, } from "lucide-react";
 import Ticket from '../assets/ticket.png'
 import Events from "./Events";
-import {useNavigate} from 'react-router-dom'
+import {useNavigate , useLocation} from 'react-router-dom'
+import { useAuth } from "./AuthContext";
 const EventCard = ({ event }) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const lowestPrice = Math.min(
     ...event.ticketTypes.map(ticket => ticket.price)
   );
   console.log(event)
+  const {user} = useAuth()
+
+  console.log(user)
   return (
     <article className="event-card">
 
@@ -57,7 +62,13 @@ const EventCard = ({ event }) => {
 
           </div>
 
-          <button onClick={() => navigate(`/event/${event._id}/${event.celebrity}`)}>
+          <button onClick={() => {
+            user !== null ? navigate(`/event/${event._id}/${event.celebrity}`) : navigate('/auth' , {
+              state : {
+                from : location
+              }
+            })
+          }}>
 
            <img src={Ticket} alt="" style={{width:"20px"}}/>
 

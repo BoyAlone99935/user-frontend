@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { HiOutlineMenuAlt3, HiOutlineX } from "react-icons/hi";
-
+import { useAuth } from "./AuthContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const {user} = useAuth()
 
   useEffect(() => {
     const handleScroll = () => {

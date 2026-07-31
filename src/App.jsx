@@ -5,6 +5,7 @@ import './App.css'
 import './index.css'
 import EventList from "./Pages/EventList";
 import CheckOut from "./Pages/CheckOut";
+import AuthPage from "./Pages/Auth";
 function App() {
  
   return (
@@ -18,6 +19,10 @@ function App() {
        <Route
         path="/event/:id/:celebid/"
         element={<CheckOut/>}
+      />
+       <Route
+        path="/auth"
+        element={<AuthPage/>}
       />
     </Routes>
   )
