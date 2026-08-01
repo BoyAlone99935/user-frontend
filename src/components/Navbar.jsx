@@ -5,7 +5,7 @@ import { useAuth } from "./AuthContext";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const {user} = useAuth()
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +16,13 @@ const Navbar = () => {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const initial = user?.username?.[0]?.toUpperCase() || "?";
+
+  const handleLogout = () => {
+    setMenuOpen(false);
+    logout();
+  };
 
   return (
     <>
@@ -35,13 +42,20 @@ const Navbar = () => {
           </ul>
 
           <div className="nav-actions">
-            <button className="login-btn">
-              Login
-            </button>
-
-            <button className="join-btn">
-              Join Fanbase
-            </button>
+            {user ? (
+              <div className="user-chip">
+                <span className="user-avatar">{initial}</span>
+                <span className="user-name">{user.username}</span>
+                <button className="logout-btn" onClick={handleLogout}>
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <>
+                <button className="login-btn">Login</button>
+                <button className="join-btn">Join Fanbase</button>
+              </>
+            )}
           </div>
 
           <button
@@ -71,6 +85,16 @@ const Navbar = () => {
 
         </div>
 
+        {user && (
+          <div className="mobile-user">
+            <span className="user-avatar">{initial}</span>
+            <div className="mobile-user-info">
+              <span className="mobile-user-label">Signed in as</span>
+              <span className="mobile-user-name">{user.username}</span>
+            </div>
+          </div>
+        )}
+
         <div className="mobile-links">
           <a href="#events" onClick={() => setMenuOpen(false)}>Events</a>
           <a href="#meet" onClick={() => setMenuOpen(false)}>Meet & Greet</a>
@@ -79,13 +103,16 @@ const Navbar = () => {
         </div>
 
         <div className="mobile-buttons">
-          <button className="login-btn">
-            Login
-          </button>
-
-          <button className="join-btn">
-            Join Fanbase
-          </button>
+          {user ? (
+            <button className="login-btn" onClick={handleLogout}>
+              Logout
+            </button>
+          ) : (
+            <>
+              <button className="login-btn">Login</button>
+              <button className="join-btn">Join Fanbase</button>
+            </>
+          )}
         </div>
 
       </aside>

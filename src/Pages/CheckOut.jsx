@@ -6,6 +6,7 @@ import '../Event.css'
 import TicketSelector from '../components/TicketSelector'
 import EventDetails from '../components/EventDetails'
 import MoreFromArtist from '../components/MoreFromArtist'
+import CookieConsent from '../components/CookieConsent'
 const CheckOut = () => {
   const [event , setEvent] = useState([])
   const {id} = useParams()
@@ -36,7 +37,8 @@ const CheckOut = () => {
       <EventHero event = {event}/>
       <TicketSelector event = {event} onCheckout={handleCheckout}/>
       <EventDetails event = {event}/>
-      <MoreFromArtist/>
+      <MoreFromArtist currentEventId={id}/>
+      <CookieConsent/>
     </div>
   )
 }

@@ -16,7 +16,7 @@ const getStartingPrice = (ticketTypes) => {
   return Math.min(...ticketTypes.map((t) => t.price));
 };
 
-const MoreFromArtist = ({ celebrityId, currentEventId }) => {
+const MoreFromArtist = ({currentEventId }) => {
   const {celebid} = useParams()
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
@@ -43,7 +43,7 @@ const MoreFromArtist = ({ celebrityId, currentEventId }) => {
     };
 
     if (celebid) fetchEvents();
-  }, [celebid]);
+  }, [celebid , currentEventId]);
 
   if (loading || events.length === 0) return null;
 
