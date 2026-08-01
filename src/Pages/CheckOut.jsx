@@ -7,18 +7,26 @@ import TicketSelector from '../components/TicketSelector'
 import EventDetails from '../components/EventDetails'
 import MoreFromArtist from '../components/MoreFromArtist'
 import CookieConsent from '../components/CookieConsent'
+import Policy from '../components/Policy'
+import Loader from '../components/Loader'
 const CheckOut = () => {
   const [event , setEvent] = useState([])
+  const [loading , setLoading] = useState(true)
   const {id} = useParams()
   useEffect(() => {
    const fetchEventDetails = async () => {
+     setLoading(true)
      try {
       const eventDet = await fetch (`https://fan-platform-backend.onrender.com/api/v1/events/${id}`)
         const eventData = await eventDet.json();
         console.log(eventData)
         setEvent(eventData.event);
+       setTimeout(() => {
+        setLoading(false);
+       }, 5000);
      } catch (err) {
       console.log(err)
+      setLoading(false);
      }
    }
 
@@ -33,10 +41,12 @@ const CheckOut = () => {
   }
 };
   return (
+    loading ? <Loader overlay fullScreen={true} text="Finding Tickets" /> :
     <div>
       <EventHero event = {event}/>
       <TicketSelector event = {event} onCheckout={handleCheckout}/>
       <EventDetails event = {event}/>
+      {/* <Policy /> */}
       <MoreFromArtist currentEventId={id}/>
       <CookieConsent/>
     </div>

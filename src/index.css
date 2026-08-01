@@ -177,6 +177,90 @@
 .hero-actions button svg{ flex-shrink:0; }
 .hero-content button:active{ transform:scale(0.98); }
 
+
+
+/* ========================================
+   SKELETON — base shimmer block
+======================================== */
+
+.skeleton{
+    display:inline-block;
+    background:linear-gradient(
+        90deg,
+        var(--bg-alt) 25%,
+        var(--border) 50%,
+        var(--bg-alt) 75%
+    );
+    background-size:200% 100%;
+    animation:skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer{
+    0%{ background-position:200% 0; }
+    100%{ background-position:-200% 0; }
+}
+
+/* ========================================
+   TICKET ROW SKELETON — mirrors .ts-row
+======================================== */
+
+.ts-row-skeleton{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:12px;
+}
+
+/* ========================================
+   EVENT CARD SKELETON — mirrors .mfa-card
+======================================== */
+
+.mfa-card-skeleton{
+    display:flex;
+    flex-direction:column;
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.mfa-card-skeleton .skeleton-image{
+    width:100%;
+    aspect-ratio:4 / 3;
+}
+
+.mfa-card-skeleton-body{
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+/* ========================================
+   BRANDED SPINNER — for buttons / inline actions
+======================================== */
+
+.spinner{
+    display:inline-block;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    border:2.5px solid rgba(255,255,255,0.35);
+    border-top-color:#fff;
+    animation:spinner-spin .7s linear infinite;
+}
+
+/* dark variant, for use on light backgrounds */
+.spinner.dark{
+    border-color:var(--border);
+    border-top-color:var(--purple-700);
+}
+
+@keyframes spinner-spin{
+    to{ transform:rotate(360deg); }
+}
+
 /* ---------- ONE clean breakpoint instead of three overlapping ones ---------- */
 @media (max-width:640px){
   .hero-content{ align-items:flex-start; }

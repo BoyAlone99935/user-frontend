@@ -1,0 +1,511 @@
+.ts-section{
+    width:100%;
+    max-width:1950px;
+    margin:0 auto;
+    padding:48px 32px 60px;
+}
+
+.ts-layout{
+    display:grid;
+    grid-template-columns:1.7fr 1fr;
+    gap:36px;
+    align-items:start;
+}
+
+/* ========================================
+   HEADER
+======================================== */
+
+.ts-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.ts-header h2{
+    font-weight:700;
+    font-size:20px;
+    color:var(--text);
+    margin:0;
+}
+
+.ts-order-max-note{
+    font-size:12px;
+    font-weight:600;
+    color:#b91c1c;
+    white-space:nowrap;
+}
+
+/* ========================================
+   EMPTY STATE
+======================================== */
+
+.ts-empty-state{
+    padding:60px 20px;
+    text-align:center;
+    border:1px dashed var(--border);
+    border-radius:14px;
+    color:var(--text-muted);
+    font-size:14px;
+}
+
+/* screen-reader-only utility, used for the live cart announcement */
+.sr-only{
+    position:absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    white-space:nowrap;
+    border:0;
+}
+
+/* ========================================
+   TICKET ROWS — compact, neutral, real images
+======================================== */
+
+.ts-ticket-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.ts-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--bg);
+    transition:border-color .2s ease, background .2s ease;
+}
+
+.ts-row:hover{
+    background:var(--bg-alt);
+}
+
+.ts-row.selected{
+    border-color:var(--purple-700);
+    background:var(--bg);
+}
+
+.ts-row.sold-out{
+    opacity:0.5;
+}
+
+.ts-row-image{
+    width:56px;
+    height:56px;
+    border-radius:8px;
+    object-fit:cover;
+    background:var(--bg-alt);
+    flex-shrink:0;
+}
+
+.ts-row-info{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+
+.ts-row-name{
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--text);
+}
+
+.ts-row-meta{
+    font-size:12.5px;
+    color:var(--text-muted);
+}
+
+.ts-row-note{
+    font-size:11.5px;
+    color:var(--text-muted);
+}
+
+.ts-row-low{
+    font-size:11.5px;
+    font-weight:600;
+    color:#b91c1c;
+}
+
+.ts-row-price{
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--text);
+    flex-shrink:0;
+    min-width:50px;
+    text-align:right;
+}
+
+.ts-row-soldout{
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--text-muted);
+    flex-shrink:0;
+    white-space:nowrap;
+}
+
+/* ---- stepper ---- */
+.ts-stepper{
+    display:flex;
+    align-items:center;
+    gap:2px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:3px;
+    flex-shrink:0;
+}
+
+.ts-stepper button{
+    width:26px;
+    height:26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:none;
+    border-radius:5px;
+    background:var(--bg-alt);
+    color:var(--text);
+    cursor:pointer;
+    transition:.15s ease;
+}
+
+.ts-stepper button:hover:not(:disabled){
+    background:var(--border);
+}
+
+.ts-stepper button:disabled{
+    opacity:0.3;
+    cursor:not-allowed;
+}
+
+.ts-stepper-value{
+    display:inline-block;
+    width:22px;
+    text-align:center;
+    font-size:13px;
+    font-weight:700;
+    color:var(--text);
+    animation:ts-bump .18s ease;
+}
+
+/* subtle tactile pulse whenever quantity changes — triggered by the
+   React key={qty} remount on this span */
+@keyframes ts-bump{
+    0%{ transform:scale(1.35); color:var(--purple-700); }
+    100%{ transform:scale(1); color:var(--text); }
+}
+
+/* ========================================
+   DESKTOP SUMMARY — plain panel
+======================================== */
+
+.ts-summary{
+    position:sticky;
+    top:24px;
+}
+
+.ts-summary-card{
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+    background:var(--bg);
+}
+
+.ts-summary-card h3{
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--text);
+    margin:0 0 16px;
+}
+
+.ts-summary-empty p{
+    font-size:13px;
+    color:var(--text-muted);
+    text-align:center;
+    padding:20px 0;
+    margin:0;
+}
+
+.ts-summary-items{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.ts-summary-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    font-size:13px;
+}
+
+.ts-summary-item-name{
+    color:var(--text);
+    font-weight:600;
+}
+
+.ts-summary-item-name span{
+    color:var(--text-muted);
+    font-weight:400;
+}
+
+.ts-summary-item-right{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+}
+
+.ts-summary-item-total{
+    color:var(--text);
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.ts-summary-remove{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    border:none;
+    background:var(--bg-alt);
+    color:var(--text-muted);
+    cursor:pointer;
+    transition:.15s ease;
+}
+
+.ts-summary-remove:hover{
+    background:#b91c1c;
+    color:#fff;
+}
+
+.ts-summary-divider{
+    height:1px;
+    background:var(--border);
+    margin:14px 0;
+}
+
+.ts-summary-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    color:var(--text);
+    margin-bottom:6px;
+}
+
+.ts-summary-row.muted{
+    color:var(--text-muted);
+    font-size:12px;
+}
+
+.ts-summary-total{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-size:17px;
+    font-weight:700;
+    color:var(--text);
+    margin:14px 0 16px;
+}
+
+.ts-checkout-btn{
+    width:100%;
+    height:46px;
+    border:none;
+    border-radius:10px;
+    background:var(--accent-gradient);
+    color:#fff;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+    transition:filter .2s ease;
+}
+
+.ts-checkout-btn:hover:not(:disabled){
+    filter:brightness(1.06);
+}
+
+.ts-checkout-btn:disabled{
+    background:var(--border);
+    color:var(--text-muted);
+    cursor:not-allowed;
+}
+
+/* ========================================
+   MOBILE BOTTOM SHEET — hidden by default,
+   only enabled inside the mobile media query
+   below (this was the missing piece)
+======================================== */
+
+.ts-sheet-backdrop{
+    display:none;
+}
+
+.ts-sheet{
+    display:none;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media(max-width:900px){
+
+.ts-section{
+    padding:32px 20px 40px;
+}
+
+.ts-layout{
+    grid-template-columns:1fr;
+    gap:20px;
+}
+
+/* hide the plain desktop summary panel on mobile — the sheet replaces it */
+.ts-summary{
+    display:none;
+}
+
+.ts-row{
+    flex-wrap:wrap;
+}
+
+.ts-row-price{
+    order:1;
+}
+
+.ts-stepper{
+    order:2;
+    margin-left:auto;
+}
+
+.ts-row-info{
+    order:0;
+    width:100%;
+    flex-basis:100%;
+}
+
+/* backdrop, only visible+clickable when the sheet is expanded */
+.ts-sheet-backdrop{
+    display:block;
+    position:fixed;
+    inset:0;
+    z-index:299;
+    background:rgba(8,4,20,0.4);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s ease;
+}
+
+.ts-sheet-backdrop.show{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.ts-sheet{
+    display:block;
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:300;
+
+    background:var(--bg);
+    border-top:1px solid var(--border);
+    border-radius:16px 16px 0 0;
+    box-shadow:0 -8px 24px -8px rgba(20,15,40,0.15);
+
+    max-height:70vh;
+    overflow-y:auto;
+
+    transition:transform .3s cubic-bezier(.32,.72,0,1);
+}
+
+.ts-sheet-handle{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    padding:10px 0 4px;
+    border:none;
+    background:none;
+    cursor:pointer;
+}
+
+.ts-sheet-bar{
+    width:36px;
+    height:4px;
+    border-radius:999px;
+    background:var(--border);
+}
+
+.ts-sheet-collapsed{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 20px 18px;
+    cursor:pointer;
+}
+
+.ts-sheet-collapsed-info{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text);
+}
+
+.ts-sheet-total{
+    font-weight:700;
+}
+
+.ts-sheet-fees-note{
+    font-weight:400;
+    font-size:11px;
+    color:var(--text-muted);
+}
+
+.ts-sheet-expanded{
+    padding:4px 20px 24px;
+}
+
+.ts-sheet-expanded-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:16px;
+}
+
+.ts-sheet-expanded-header h3{
+    font-size:15px;
+    font-weight:700;
+    color:var(--text);
+    margin:0;
+}
+
+.ts-sheet-expanded-header button{
+    width:30px;
+    height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    border:1px solid var(--border);
+    background:var(--bg-alt);
+    color:var(--text);
+    cursor:pointer;
+}
+
+}
