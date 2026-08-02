@@ -5,6 +5,12 @@ import "../TicketSelector.css";
 
 const ORDER_MAX = 10; // hard cap per order, across all ticket types combined
 
+const SORT_OPTIONS = [
+  { value: "recommended", label: "Recommended" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+];
+
 const getCapacity = (ticketType) =>
   (ticketType.rows?.length || 0) * (ticketType.seatsPerRow || 0);
 
@@ -17,8 +23,19 @@ const getRemaining = (ticketType) => {
 const TicketSelector = ({ event, onCheckout, loading = false }) => {
   const [quantities, setQuantities] = useState({});
   const [sheetExpanded, setSheetExpanded] = useState(false);
+  const [sortBy, setSortBy] = useState("recommended");
 
   const ticketTypes = event?.ticketTypes || [];
+
+  const sortedTicketTypes = useMemo(() => {
+    if (sortBy === "price-asc") {
+      return [...ticketTypes].sort((a, b) => a.price - b.price);
+    }
+    if (sortBy === "price-desc") {
+      return [...ticketTypes].sort((a, b) => b.price - a.price);
+    }
+    return ticketTypes;
+  }, [ticketTypes, sortBy]);
 
   const totalQty = useMemo(
     () => Object.values(quantities).reduce((sum, q) => sum + q, 0),
@@ -32,7 +49,6 @@ const TicketSelector = ({ event, onCheckout, loading = false }) => {
       const perTypeMax = remaining !== null ? remaining : 10;
 
       if (delta > 0) {
-        // respect both this ticket type's own stock AND the order-wide cap
         const roomLeftInOrder = ORDER_MAX - totalQty;
         const maxAllowed = current + Math.max(roomLeftInOrder, 0);
         const next = Math.min(current + delta, perTypeMax, maxAllowed);
@@ -67,7 +83,6 @@ const TicketSelector = ({ event, onCheckout, loading = false }) => {
     }
   };
 
-  // lock scroll + allow Escape to close while the mobile sheet is expanded
   useEffect(() => {
     if (!sheetExpanded) return;
 
@@ -148,7 +163,7 @@ const TicketSelector = ({ event, onCheckout, loading = false }) => {
         <span>${subtotal}</span>
       </div>
       <div className="ts-summary-row muted">
-        <span>Fees</span>
+        <span>Fees &amp; taxes</span>
         <span>Calculated at checkout</span>
       </div>
 
@@ -157,7 +172,6 @@ const TicketSelector = ({ event, onCheckout, loading = false }) => {
         <span>${subtotal}</span>
       </div>
 
-      {/* screen-reader-only live update, not shown visually */}
       <span className="sr-only" aria-live="polite">
         {totalQty} ticket{totalQty !== 1 ? "s" : ""} in cart, total ${subtotal}
       </span>
@@ -182,22 +196,45 @@ const TicketSelector = ({ event, onCheckout, loading = false }) => {
         <div className="ts-selector">
 
           <div className="ts-header">
-            <h2>Select Tickets</h2>
-            {atOrderMax && (
-              <span className="ts-order-max-note">
-                Limit {ORDER_MAX} tickets per order
+            <div className="ts-header-titles">
+              <h2>Select Tickets</h2>
+              <span className="ts-fees-disclosure">
+                Prices shown exclude applicable fees and taxes
               </span>
-            )}
+            </div>
+
+            <div className="ts-header-right">
+              {atOrderMax && (
+                <span className="ts-order-max-note">
+                  Limit {ORDER_MAX} per order
+                </span>
+              )}
+
+              <label className="ts-sort">
+                <span>Sort by</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  {SORT_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
           </div>
 
           <div className="ts-ticket-list">
-            {ticketTypes.map((tt) => {
+            {sortedTicketTypes.map((tt) => {
               const qty = quantities[tt._id] || 0;
               const remaining = getRemaining(tt);
               const isLow = remaining !== null && remaining > 0 && remaining <= 10;
               const isSoldOut = remaining === 0;
               const plusDisabled =
                 (remaining !== null && qty >= remaining) || atOrderMax;
+              const isVip = tt.cartegory === "vip";
 
               return (
                 <div
@@ -211,11 +248,22 @@ const TicketSelector = ({ event, onCheckout, loading = false }) => {
                   />
 
                   <div className="ts-row-info">
+                    <div className="ts-row-badges">
+                      <span className={`ts-pill ${isVip ? "vip" : "regular"}`}>
+                        {isVip ? "VIP" : "Regular"}
+                      </span>
+                      <span className="ts-pill outline">
+                        {tt.ticketType}
+                      </span>
+                      {tt.section && (
+                        <span className="ts-pill outline">
+                          Sec {tt.section}
+                        </span>
+                      )}
+                    </div>
+
                     <span className="ts-row-name">{tt.name}</span>
-                    <span className="ts-row-meta">
-                      {tt.cartegory === "vip" ? "VIP" : "Regular"} · {tt.ticketType}
-                      {tt.section && ` · Section ${tt.section}`}
-                    </span>
+
                     {tt.ticketType === "Reserved" && (
                       <span className="ts-row-note">
                         Best available seat assigned automatically
@@ -226,7 +274,10 @@ const TicketSelector = ({ event, onCheckout, loading = false }) => {
                     )}
                   </div>
 
-                  <span className="ts-row-price">${tt.price}</span>
+                  <div className="ts-row-price-block">
+                    <span className="ts-row-price">${tt.price}</span>
+                    <span className="ts-row-price-fees">+ fees</span>
+                  </div>
 
                   {isSoldOut ? (
                     <span className="ts-row-soldout">Sold Out</span>

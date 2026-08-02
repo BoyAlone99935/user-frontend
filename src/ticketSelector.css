@@ -1,6 +1,11 @@
+/* NOTE ON WIDTH: intentionally 1180px to match .ed-section and
+   .mfa-section further down the page, so container edges line up while
+   scrolling. If this drifts back to a different number later, the
+   ticket selector will visibly stick out wider than everything below
+   it — keep it in sync with those two. */
 .ts-section{
     width:100%;
-    max-width:1950px;
+    max-width:1180px;
     margin:0 auto;
     padding:48px 32px 60px;
 }
@@ -13,15 +18,23 @@
 }
 
 /* ========================================
-   HEADER
+   HEADER — title + fee disclosure left,
+   sort control right
 ======================================== */
 
 .ts-header{
     display:flex;
-    align-items:center;
+    align-items:flex-start;
     justify-content:space-between;
-    gap:12px;
-    margin-bottom:18px;
+    gap:20px;
+    margin-bottom:22px;
+    flex-wrap:wrap;
+}
+
+.ts-header-titles{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
 }
 
 .ts-header h2{
@@ -31,11 +44,64 @@
     margin:0;
 }
 
+.ts-fees-disclosure{
+    font-size:12px;
+    color:var(--text-muted);
+}
+
+.ts-header-right{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex-shrink:0;
+}
+
 .ts-order-max-note{
     font-size:12px;
     font-weight:600;
     color:#b91c1c;
     white-space:nowrap;
+}
+
+.ts-sort{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.ts-sort > span{
+    font-size:12.5px;
+    color:var(--text-muted);
+    white-space:nowrap;
+}
+
+.ts-sort select{
+    height:38px;
+    padding:0 34px 0 12px;
+
+    border:1px solid var(--border);
+    border-radius:9px;
+    background-color:var(--bg);
+
+    color:var(--text);
+    font-size:12.5px;
+    font-weight:600;
+
+    cursor:pointer;
+    outline:none;
+
+    appearance:none;
+    -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%236c6a7c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 10px center;
+
+    transition:border-color .2s ease;
+}
+
+.ts-sort select:hover,
+.ts-sort select:focus{
+    border-color:var(--purple-700);
 }
 
 /* ========================================
@@ -51,7 +117,6 @@
     font-size:14px;
 }
 
-/* screen-reader-only utility, used for the live cart announcement */
 .sr-only{
     position:absolute;
     width:1px;
@@ -65,7 +130,7 @@
 }
 
 /* ========================================
-   TICKET ROWS — compact, neutral, real images
+   TICKET ROWS
 ======================================== */
 
 .ts-ticket-list{
@@ -82,7 +147,7 @@
     border:1px solid var(--border);
     border-radius:12px;
     background:var(--bg);
-    transition:border-color .2s ease, background .2s ease;
+    transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;
 }
 
 .ts-row:hover{
@@ -92,6 +157,7 @@
 .ts-row.selected{
     border-color:var(--purple-700);
     background:var(--bg);
+    box-shadow:0 0 0 1px var(--purple-700);
 }
 
 .ts-row.sold-out{
@@ -112,18 +178,50 @@
     min-width:0;
     display:flex;
     flex-direction:column;
-    gap:2px;
+    gap:5px;
+}
+
+.ts-row-badges{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
+}
+
+.ts-pill{
+    display:inline-flex;
+    align-items:center;
+    padding:2.5px 9px;
+    border-radius:999px;
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:0.02em;
+    text-transform:uppercase;
+    line-height:1.5;
+}
+
+.ts-pill.vip{
+    background:linear-gradient(135deg,#f4d374,#d4af37);
+    color:#3a2c05;
+}
+
+.ts-pill.regular{
+    background:var(--accent-gradient-soft);
+    color:var(--purple-700);
+}
+
+.ts-pill.outline{
+    background:var(--bg-alt);
+    color:var(--text-muted);
+    border:1px solid var(--border);
+    text-transform:none;
+    font-weight:600;
 }
 
 .ts-row-name{
     font-size:14.5px;
     font-weight:700;
     color:var(--text);
-}
-
-.ts-row-meta{
-    font-size:12.5px;
-    color:var(--text-muted);
 }
 
 .ts-row-note{
@@ -137,13 +235,24 @@
     color:#b91c1c;
 }
 
-.ts-row-price{
-    font-size:14.5px;
-    font-weight:700;
-    color:var(--text);
+.ts-row-price-block{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
     flex-shrink:0;
-    min-width:50px;
-    text-align:right;
+    min-width:64px;
+}
+
+.ts-row-price{
+    font-size:16px;
+    font-weight:800;
+    color:var(--purple-700);
+    line-height:1.2;
+}
+
+.ts-row-price-fees{
+    font-size:10.5px;
+    color:var(--text-muted);
 }
 
 .ts-row-soldout{
@@ -154,7 +263,6 @@
     white-space:nowrap;
 }
 
-/* ---- stepper ---- */
 .ts-stepper{
     display:flex;
     align-items:center;
@@ -180,7 +288,8 @@
 }
 
 .ts-stepper button:hover:not(:disabled){
-    background:var(--border);
+    background:var(--accent-gradient);
+    color:#fff;
 }
 
 .ts-stepper button:disabled{
@@ -198,15 +307,13 @@
     animation:ts-bump .18s ease;
 }
 
-/* subtle tactile pulse whenever quantity changes — triggered by the
-   React key={qty} remount on this span */
 @keyframes ts-bump{
     0%{ transform:scale(1.35); color:var(--purple-700); }
     100%{ transform:scale(1); color:var(--text); }
 }
 
 /* ========================================
-   DESKTOP SUMMARY — plain panel
+   DESKTOP SUMMARY
 ======================================== */
 
 .ts-summary{
@@ -345,9 +452,7 @@
 }
 
 /* ========================================
-   MOBILE BOTTOM SHEET — hidden by default,
-   only enabled inside the mobile media query
-   below (this was the missing piece)
+   MOBILE BOTTOM SHEET
 ======================================== */
 
 .ts-sheet-backdrop{
@@ -373,7 +478,15 @@
     gap:20px;
 }
 
-/* hide the plain desktop summary panel on mobile — the sheet replaces it */
+.ts-header{
+    flex-direction:column;
+    align-items:stretch;
+}
+
+.ts-header-right{
+    justify-content:space-between;
+}
+
 .ts-summary{
     display:none;
 }
@@ -382,8 +495,9 @@
     flex-wrap:wrap;
 }
 
-.ts-row-price{
+.ts-row-price-block{
     order:1;
+    align-items:flex-start;
 }
 
 .ts-stepper{
@@ -397,7 +511,6 @@
     flex-basis:100%;
 }
 
-/* backdrop, only visible+clickable when the sheet is expanded */
 .ts-sheet-backdrop{
     display:block;
     position:fixed;
