@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChevronUp, Minus, Plus, X } from "lucide-react";
 import TicketSelectorSkeleton from "./TicketSkeleton";
+import { Link, useNavigate } from "react-router-dom";
 import "../TicketSelector.css";
+import Loader from './Loader'
 
-const ORDER_MAX = 10; // hard cap per order, across all ticket types combined
+
+const ORDER_MAX = 5; // hard cap per order, across all ticket types combined
 
 const SORT_OPTIONS = [
   { value: "recommended", label: "Recommended" },
@@ -20,10 +23,13 @@ const getRemaining = (ticketType) => {
   return Math.max(capacity - ticketType.sold, 0);
 };
 
-const TicketSelector = ({ event, onCheckout, loading = false }) => {
+const TicketSelector = ({ event, loading = false }) => {
   const [quantities, setQuantities] = useState({});
   const [sheetExpanded, setSheetExpanded] = useState(false);
   const [sortBy, setSortBy] = useState("recommended");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [spinning , setSpinning] = useState(false)
+  const navigate = useNavigate()
 
   const ticketTypes = event?.ticketTypes || [];
 
@@ -75,12 +81,24 @@ const TicketSelector = ({ event, onCheckout, loading = false }) => {
     0
   );
 
-  const handleCheckout = () => {
+  /*const handleCheckout = () => {
     if (onCheckout) {
       onCheckout(selectedItems);
     } else {
       console.log("Proceeding to checkout with:", selectedItems);
     }
+  };*/
+
+  const handleCheckout = () => {
+    if (totalQty === 0 || !agreedToTerms) return;
+
+    setSpinning(true);
+    setTimeout(() => {
+      navigate("/checkout", {
+        state: { event, selectedItems },
+      });
+      setSpinning(false);
+    }, 2000);
   };
 
   useEffect(() => {
@@ -98,17 +116,10 @@ const TicketSelector = ({ event, onCheckout, loading = false }) => {
     };
   }, [sheetExpanded]);
 
-  if (loading) {
+  if (spinning) {
     return (
       <section id="ticket-selector" className="ts-section">
-        <div className="ts-layout">
-          <div className="ts-selector">
-            <div className="ts-header">
-              <h2>Select Tickets</h2>
-            </div>
-            <TicketSelectorSkeleton />
-          </div>
-        </div>
+       <Loader overlay  text="Redirecting to Checkout" fullScreen={false}/>
       </section>
     );
   }
@@ -176,11 +187,37 @@ const TicketSelector = ({ event, onCheckout, loading = false }) => {
         {totalQty} ticket{totalQty !== 1 ? "s" : ""} in cart, total ${subtotal}
       </span>
 
+      <div className="ts-policy-note">
+        <ul>
+          <li>All sales are final unless otherwise required by law</li>
+          <li>Prices shown exclude fees and taxes, calculated at checkout</li>
+          <li>Tickets are held for a limited time once checkout begins</li>
+        </ul>
+
+        <label className="ts-terms-check">
+          <input
+            type="checkbox"
+            checked={agreedToTerms}
+            onChange={(e) => setAgreedToTerms(e.target.checked)}
+          />
+          <span>
+            I agree to the{" "}
+            <Link to="/terms" target="_blank" rel="noreferrer">
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link to="/refunds" target="_blank" rel="noreferrer">
+              Refund Policy
+            </Link>
+          </span>
+        </label>
+      </div>
+
       <button
         type="button"
         className="ts-checkout-btn"
         onClick={handleCheckout}
-        disabled={totalQty === 0}
+        disabled={totalQty === 0 || !agreedToTerms}
       >
         Checkout ({totalQty})
       </button>

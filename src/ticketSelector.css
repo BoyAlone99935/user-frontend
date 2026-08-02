@@ -451,6 +451,64 @@
     cursor:not-allowed;
 }
 
+/* ---- policy note + terms checkbox, sits right above checkout ---- */
+.ts-policy-note{
+    margin:14px 0;
+    padding:12px 14px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--bg-alt);
+}
+
+.ts-policy-note ul{
+    margin:0 0 10px;
+    padding-left:16px;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.ts-policy-note li{
+    font-size:11.5px;
+    line-height:1.5;
+    color:var(--text-muted);
+}
+
+.ts-terms-check{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    cursor:pointer;
+    padding-top:10px;
+    border-top:1px solid var(--border);
+}
+
+.ts-terms-check input{
+    margin-top:2px;
+    width:14px;
+    height:14px;
+    flex-shrink:0;
+    accent-color:var(--purple-700);
+    cursor:pointer;
+}
+
+.ts-terms-check span{
+    font-size:12px;
+    line-height:1.5;
+    color:var(--text);
+}
+
+.ts-terms-check a{
+    color:var(--purple-700);
+    font-weight:600;
+    text-decoration:underline;
+    text-underline-offset:2px;
+}
+
+.ts-terms-check a:hover{
+    opacity:0.75;
+}
+
 /* ========================================
    MOBILE BOTTOM SHEET
 ======================================== */

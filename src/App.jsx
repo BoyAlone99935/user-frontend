@@ -4,7 +4,8 @@ import Celebrity from "./Pages/Celebrity";
 import './App.css'
 import './index.css'
 import EventList from "./Pages/EventList";
-import CheckOut from "./Pages/CheckOut";
+import EventDet from './Pages/EventDet'
+import CheckoutFlow from "./Pages/CheckOut";
 import AuthPage from "./Pages/Auth";
 function App() {
  
@@ -18,8 +19,14 @@ function App() {
       />
        <Route
         path="/event/:id/:celebid/"
-        element={<CheckOut/>}
+        element={<EventDet/>}
       />
+
+         <Route
+        path="/checkout"
+        element={<CheckoutFlow/>}
+      />
+
        <Route
         path="/auth"
         element={<AuthPage/>}
