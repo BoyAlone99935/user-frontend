@@ -861,3 +861,193 @@
     color:var(--text-muted);
     flex-shrink:0;
 }
+
+
+
+
+
+
+
+
+/* ==== add these to Checkoutflow.module.css ==== */
+
+.coinHeader{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+    flex-wrap:wrap;
+}
+
+.coinBadge{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    padding:5px 12px;
+    border-radius:999px;
+    background:#26a17b;
+    color:#fff;
+    font-size:12.5px;
+    font-weight:700;
+}
+
+.networkList{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:14px;
+}
+
+.networkItem{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--bg);
+    cursor:pointer;
+    text-align:left;
+    transition:border-color .2s ease, background .2s ease;
+}
+
+.networkItem:hover{
+    border-color:var(--purple-700);
+    background:var(--bg-alt);
+}
+
+.networkBadge{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:10.5px;
+    font-weight:800;
+    letter-spacing:0.02em;
+    flex-shrink:0;
+}
+
+.networkItemText{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+
+.networkItemName{
+    font-size:14px;
+    font-weight:700;
+    color:var(--text);
+}
+
+.networkItemMeta{
+    font-size:12px;
+    color:var(--text-muted);
+}
+
+.networkPill{
+    padding:4px 10px;
+    border-radius:999px;
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+}
+
+.coinLoading{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    padding:40px 20px;
+    text-align:center;
+}
+
+.coinLoading p{
+    font-size:13.5px;
+    color:var(--text-muted);
+    margin:0;
+}
+
+.coinLoading .spinner{
+    border-color:var(--border);
+    border-top-color:var(--purple-700);
+    width:24px;
+    height:24px;
+}
+
+.coinAmount{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:12px 14px;
+    margin:14px 0;
+    border-radius:10px;
+    background:var(--accent-gradient-soft);
+}
+
+.coinAmount span:first-child{
+    font-size:12.5px;
+    color:var(--purple-700);
+    font-weight:600;
+}
+
+.coinAmount span:last-child{
+    font-size:16px;
+    font-weight:800;
+    color:var(--purple-700);
+}
+
+.qrWrap{
+    display:flex;
+    justify-content:center;
+    padding:16px;
+    margin-bottom:14px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    background:var(--bg-alt);
+}
+
+.qrWrap img{
+    width:180px;
+    height:180px;
+    border-radius:8px;
+}
+
+.addressBox{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px;
+    margin-bottom:14px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--bg-alt);
+}
+
+.addressText{
+    font-size:12.5px;
+    font-family:monospace;
+    color:var(--text);
+    word-break:break-all;
+}
+
+.linkBtn{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    border:none;
+    background:none;
+    color:var(--purple-700);
+    font-size:12.5px;
+    font-weight:600;
+    cursor:pointer;
+    padding:0;
+    margin-bottom:14px;
+}
+
+.linkBtn:hover{
+    opacity:0.75;
+}

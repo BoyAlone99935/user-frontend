@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Copy, Check, X, Landmark } from "lucide-react";
 import styles from "../Checkoutflow.module.css";
 
-// assumed mount path for the payment methods route — adjust if different
 const API_BASE = "https://fan-platform-backend.onrender.com/api/v1/payment-methods";
+const TICKETS_API_BASE = "https://fan-platform-backend.onrender.com/api/v1/tickets";
 
 function formatMoney(n) {
   const isWhole = Math.round(n * 100) % 100 === 0;
@@ -13,8 +13,6 @@ function formatMoney(n) {
   })}`;
 }
 
-// only fields that are actually populated on a given account get shown —
-// not every account has every field (IBAN vs routing number vs BSB, etc.)
 const DETAIL_FIELDS = [
   { key: "accountName", label: "Account Name" },
   { key: "bankName", label: "Bank Name" },
@@ -30,11 +28,13 @@ const DETAIL_FIELDS = [
   { key: "phoneNumber", label: "Phone Number" },
 ];
 
-const BankTransferPanel = ({ amount, onConfirm, selectedItems }) => {
+const BankTransferPanel = ({ amount, event, onConfirm, selectedItems }) => {
   const [methods, setMethods] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null); // the open modal's account
+  const [selected, setSelected] = useState(null);
   const [copiedKey, setCopiedKey] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchMethods = async () => {
@@ -53,7 +53,6 @@ const BankTransferPanel = ({ amount, onConfirm, selectedItems }) => {
     fetchMethods();
   }, []);
 
-  // lock scroll + Escape-to-close while the modal is open
   useEffect(() => {
     if (!selected) return;
     document.body.style.overflow = "hidden";
@@ -73,10 +72,45 @@ const BankTransferPanel = ({ amount, onConfirm, selectedItems }) => {
     setTimeout(() => setCopiedKey(null), 1500);
   };
 
-  const handlePaid = () => {
-    
-    setSelected(null);
-    onConfirm();
+  const handlePaid = async () => {
+    setError("");
+    setSubmitting(true);
+
+    try {
+      // one request per ticket type, since create-ticket only accepts a
+      // single ticketId + quantity per call
+      for (const item of selectedItems) {
+        const res = await fetch(`${TICKETS_API_BASE}/create-ticket`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include", // sends the auth cookie automatically
+          body: JSON.stringify({
+            bookingType: "event",
+            eventId: event._id,
+            ticketId: item.ticketType._id,
+            quantity: item.qty,
+            paymentType: "Bank", // matches Ticket schema enum exactly
+            arrangedPayment: true,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(
+            data.message ||
+              `Failed to create ticket for ${item.ticketType.name}`
+          );
+        }
+      }
+
+      setSelected(null);
+      onConfirm();
+    } catch (err) {
+      setError(err.message || "Something went wrong creating your tickets.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (loading) {
@@ -214,12 +248,21 @@ const BankTransferPanel = ({ amount, onConfirm, selectedItems }) => {
               and let us know once you've paid.
             </p>
 
+            {error && <p className={styles.bankError}>{error}</p>}
+
             <button
               type="button"
               className={styles.payBtn}
+              disabled={submitting}
               onClick={handlePaid}
             >
-              I've Paid
+              {submitting ? (
+                <>
+                  <span className={styles.spinner} /> Confirming...
+                </>
+              ) : (
+                "I've Paid"
+              )}
             </button>
           </div>
         </div>

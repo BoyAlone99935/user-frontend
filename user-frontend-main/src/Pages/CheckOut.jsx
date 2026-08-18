@@ -40,7 +40,7 @@ import {
 } from "lucide-react";
 import BankTransferPannel from "../components/BankTransferPannel";
 import CardPayment from "../components/CardPayment";
-import Crypto from "../components/Crypto";  
+import StableCoinPanel from "../components/StablecoinPanel";  
 import styles from "../Checkoutflow.module.css";
 import Loader from "../components/Loader";
 import ProviderDownModal from "../components/ProviderDownModal";
@@ -428,17 +428,21 @@ export default function CheckoutFlow() {
             </div>
           )}
 
-          {selectedMethod === "stablecoin" && (
-            <div className={styles.card}>
-              <p className={styles.fieldsNote}>
-                You'll be prompted to complete payment with USDT, USDC, or another supported
-                stablecoin.
-              </p>
-              <button type="button" className={styles.payBtn} onClick={handleInstantPay}>
-                <Lock size={14} /> Pay {formatMoney(total)}
-              </button>
-            </div>
-          )}
+          
+
+        {selectedMethod === "stablecoin" && (
+          <StableCoinPanel
+            amount={total}
+            event={event}
+            selectedItems={selectedItems}
+            onVerify={async ({ network, address, txId }) => {
+              // your real verification + ticket creation call goes here —
+              // throw an Error with a message if verification fails, and
+              // StablecoinPanel will show that message and let them retry
+            }}
+            onConfirm={handleInstantPay}
+          />
+        )}
 
           {selectedMethod === "bank" && (
             <BankTransferPannel amount={total} event={event} onConfirm={handleBankConfirm} selectedItems={selectedItems} />
