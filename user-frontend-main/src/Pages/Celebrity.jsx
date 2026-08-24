@@ -9,10 +9,13 @@ import AboutCelebrity from "../components/AboutCelebrity";
 import LivePerformances from "../components/LivePerformances";
 import FansAlsoViewed from "../components/FanAlsoViewed";
 import Footer from "../components/Footer";
+
 const Celebrity = () => {
   const { slug } = useParams();
   const [celebrity, setCelebrity] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  localStorage.setItem("slug" , slug)
 
   useEffect(() => {
     const fetchCelebrity = async () => {

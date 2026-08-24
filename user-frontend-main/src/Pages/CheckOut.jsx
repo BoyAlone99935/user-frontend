@@ -22,6 +22,7 @@ import BankTransfer from '../assets/bank-transfer.png'
 import Chat from '../assets/online-chat.png'
 import tickets from '../assets/tickets.png'
 import pending from '../assets/pending.png'
+
 import {
   ChevronLeft,
   ShieldCheck,
@@ -108,6 +109,7 @@ function generateOrderNumber() {
 export default function CheckoutFlow() {
   const location = useLocation();
   const navigate = useNavigate();
+  const slug = localStorage.getItem("slug")
   const { event, selectedItems = [] } = location.state || {};
 
   const [step, setStep] = useState("review");
@@ -188,7 +190,7 @@ export default function CheckoutFlow() {
           <p className={styles.emptyNotice}>
             No order found. Head back and pick your tickets first.
           </p>
-          <button type="button" className={styles.payBtn} onClick={() => navigate("/")}>
+          <button type="button" className={styles.payBtn} onClick={() => navigate(`/celebrity/${slug}`)}>
             Back to Home
           </button>
         </div>
@@ -564,7 +566,7 @@ export default function CheckoutFlow() {
           <button
             type="button"
             className={paymentResult === "success" ? styles.secondaryBtn : styles.payBtn}
-            onClick={() => navigate("/")}
+            onClick={() => navigate(`/celebrity/${slug}`)}
           >
             Back to Home
           </button>

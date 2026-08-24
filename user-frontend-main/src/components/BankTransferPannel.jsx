@@ -28,6 +28,7 @@ const DETAIL_FIELDS = [
   { key: "phoneNumber", label: "Phone Number" },
 ];
 
+
 const BankTransferPanel = ({ amount, event, onConfirm, selectedItems }) => {
   const [methods, setMethods] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,6 +36,9 @@ const BankTransferPanel = ({ amount, event, onConfirm, selectedItems }) => {
   const [copiedKey, setCopiedKey] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+
+
 
   useEffect(() => {
     const fetchMethods = async () => {

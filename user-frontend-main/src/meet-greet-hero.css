@@ -1,0 +1,124 @@
+.mg-page{
+    width:100%;
+    max-width:1180px;
+    margin:0 auto;
+    padding:32px 32px 80px;
+}
+
+
+.mgh-wrap{
+    margin-bottom:8px;
+}
+
+
+.mgh-back{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:16px;
+    padding:0;
+    background:none;
+    border:none;
+    color:var(--text-muted);
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:color .2s ease;
+}
+
+
+.mgh-back svg{
+    width:16px;
+    height:16px;
+    transition:transform .2s ease;
+}
+
+.mgh-back:hover{
+    color:var(--purple-700);
+}
+
+.mgh-back:hover svg{
+    transform:translateX(-3px);
+}
+
+.mgh-wrap h1{
+  
+    font-weight:700;
+    font-size:clamp(24px, 3.2vw, 34px);
+    letter-spacing:-0.01em;
+    color:var(--text);
+    margin:0 0 6px;
+    line-height:1.15;
+}
+
+.mgh-celebrity{
+    display:inline-block;
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--purple-700);
+    margin-bottom:14px;
+    transition:opacity .2s ease;
+}
+
+.mgh-celebrity:hover{
+    opacity:0.75;
+}
+
+.mgh-description{
+    font-size:14.5px;
+    line-height:1.7;
+    color:var(--text-muted);
+    max-width:640px;
+    margin:0 0 20px;
+}
+
+.mgh-photo{
+    display:block;
+    width:100%;
+    max-height:460px;
+    object-fit:cover;
+    border-radius:16px;
+    box-shadow:0 8px 30px -18px rgba(20,15,40,0.18);
+    margin-bottom:20px;
+}
+
+.mgh-meta{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+    padding-top:16px;
+    border-top:1px solid var(--border);
+}
+
+.mgh-meta span{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:13.5px;
+    color:var(--text-muted);
+}
+
+.mgh-meta svg{
+    color:var(--purple-700);
+    flex-shrink:0;
+}
+
+@media(max-width:640px){
+
+.mg-page{
+    padding:20px 20px 60px;
+}
+
+.mgh-photo{
+    max-height:280px;
+    border-radius:12px;
+}
+
+.mgh-meta{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+}
+
+}
