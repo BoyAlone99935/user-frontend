@@ -1,0 +1,282 @@
+.hero{ position:relative; background:var(--bg); }
+
+/* ---------- BANNER (single photo, everything lives on top of it) ---------- */
+.hero-banner{
+  position:relative;
+  width:100%;
+  height:clamp(380px, 40vw, 550px);
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  overflow:hidden;
+}
+
+.hero-banner::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.98) 0%,
+    rgba(0,0,0,0.88) 25%,
+    rgba(0,0,0,0.72) 50%,
+    rgba(0,0,0,0.55) 75%,
+    rgba(0,0,0,0.45) 100%
+  );
+  pointer-events: none;
+}
+
+/* brand accent line along the very bottom edge of the photo */
+.hero-banner::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:4px;
+  background:var(--accent-gradient);
+}
+
+/* ---------- CONTENT, absolutely positioned INSIDE the photo ---------- */
+/* FIX: flex-wrap so the image + text can wrap instead of overflowing,
+   and this is now the ONLY place that controls the row/column switch —
+   no more three separate breakpoints fighting each other. */
+.hero-content{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  z-index:2;
+  padding:clamp(20px, 4vw, 40px) clamp(20px, 6vw, 60px) clamp(24px, 5vw, 40px);
+  display:flex;
+  flex-direction:row;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  gap:clamp(16px, 3vw, 30px);
+}
+
+.hero-identity{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+/* FIX: fluid width instead of jumping between fixed pixel sizes at each
+   breakpoint. aspect-ratio keeps the 2:1 shape at any size. */
+.profile-image{
+  width:clamp(140px, 22vw, 400px);
+  aspect-ratio:2 / 1;
+  height:auto;
+  object-fit:cover;
+  border-radius:5px;
+  box-shadow:0 8px 20px -6px rgba(0,0,0,0.5);
+  flex-shrink:0;
+}
+
+/* FIX: this text column now gets min-width:0 so it's allowed to shrink
+   and wrap its contents instead of forcing the row to overflow. */
+.hero-text{
+  min-width:0;
+  flex:1 1 260px;
+}
+
+.hero-name{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+/* FIX: this is the actual rule your name uses (JSX renders h1 here, not
+   inside .hero-identity) — now it scales with clamp() like the rest. */
+.hero-name h1{
+  margin:0;
+  color:#fff;
+  font-size:clamp(24px, 4.2vw, 48px);
+  font-weight:700;
+  line-height:1.1;
+  text-shadow:0 2px 12px rgba(0,0,0,0.35);
+}
+
+.verified-badge{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.verified-badge svg{
+  width:clamp(16px, 2vw, 24px);
+  height:clamp(16px, 2vw, 24px);
+  flex-shrink:0;
+}
+
+.hero-tags{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.category-pill{
+  color:rgba(255,255,255,0.735);
+  margin:0;
+}
+
+.hero-bio{
+  color:rgba(255,255,255,0.735);
+  margin-top:0.7rem;
+  max-width:600px;
+  font-size:clamp(13px, 1.6vw, 15px);
+}
+
+/* ---------- BOTTOM ROW: socials + CTA ---------- */
+.hero-actions{
+  display:flex;
+  align-items:center;
+  gap:clamp(10px, 2vw, 18px);
+  margin-top:24px;
+  flex-wrap:wrap;
+}
+
+.hero-actions button{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 24px;
+  border-radius:8px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.25s ease;
+  white-space:nowrap;
+}
+
+/* FIX: was font-size:30px — almost certainly a typo, it was blowing up
+   the button far past what the layout could handle on any screen size. */
+.events-btn{
+  padding:10px 20px;
+  font-size:15px;
+  font-weight:600;
+  color:#fff;
+  background:var(--accent-gradient);
+  border-radius:5px;
+  box-shadow:var(--shadow-glow);
+  transition:box-shadow .25s ease, transform .15s ease, filter .2s ease;
+  border:none;
+}
+.events-btn span{ font-size:1rem; }
+
+.meet-btn{
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.25);
+  backdrop-filter:blur(12px);
+}
+.meet-btn:hover{
+  background:rgba(255,255,255,.18);
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.45);
+}
+.meet-btn span{ font-size:1rem; }
+
+.hero-actions button svg{ flex-shrink:0; }
+.hero-content button:active{ transform:scale(0.98); }
+
+
+
+/* ========================================
+   SKELETON — base shimmer block
+======================================== */
+
+.skeleton{
+    display:inline-block;
+    background:linear-gradient(
+        90deg,
+        var(--bg-alt) 25%,
+        var(--border) 50%,
+        var(--bg-alt) 75%
+    );
+    background-size:200% 100%;
+    animation:skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer{
+    0%{ background-position:200% 0; }
+    100%{ background-position:-200% 0; }
+}
+
+/* ========================================
+   TICKET ROW SKELETON — mirrors .ts-row
+======================================== */
+
+.ts-row-skeleton{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:12px;
+}
+
+/* ========================================
+   EVENT CARD SKELETON — mirrors .mfa-card
+======================================== */
+
+.mfa-card-skeleton{
+    display:flex;
+    flex-direction:column;
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.mfa-card-skeleton .skeleton-image{
+    width:100%;
+    aspect-ratio:4 / 3;
+}
+
+.mfa-card-skeleton-body{
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+/* ========================================
+   BRANDED SPINNER — for buttons / inline actions
+======================================== */
+
+.spinner{
+    display:inline-block;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    border:2.5px solid rgba(255,255,255,0.35);
+    border-top-color:#fff;
+    animation:spinner-spin .7s linear infinite;
+}
+
+/* dark variant, for use on light backgrounds */
+.spinner.dark{
+    border-color:var(--border);
+    border-top-color:var(--purple-700);
+}
+
+@keyframes spinner-spin{
+    to{ transform:rotate(360deg); }
+}
+
+/* ---------- ONE clean breakpoint instead of three overlapping ones ---------- */
+@media (max-width:640px){
+  .hero-content{ align-items:flex-start; }
+  .hero-identity{ display:none; } /* thumbnail gives up the least on tiny screens */
+  .hero-actions{ flex-direction:row; flex-wrap:nowrap; width:100%; gap:10px; }
+  .hero-actions button{
+    flex:1 1 0;
+    justify-content:center;
+    padding:12px 14px;
+    font-size:13.5px;
+    white-space:nowrap;
+  }
+  .events-btn span, .meet-btn span{ font-size:0.9rem; }
+}
+
+@media (max-width:380px){
+  .hero-actions button span{ display:none; } /* icon-only if it's still too tight */
+}
+
