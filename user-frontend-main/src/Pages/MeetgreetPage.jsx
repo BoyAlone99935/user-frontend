@@ -7,6 +7,7 @@ import WhatsIncluded from "../components/WhatsIncluded";
 import HowItWorks from "../components/HowItWorks";
 import Navbar from "../components/Navbar";
 import Gallery from "../components/Gallery";
+import LocationSection from "../components/EventLocation";
 import "../meet-greet-hero.css";
 
 // assumed mount path, matching your other v1 routers — adjust if different
@@ -71,6 +72,7 @@ const MeetGreetPage = () => {
       <WhatsIncluded meetAndGreet={meetAndGreet} />
       <HowItWorks/>
       <Gallery meetAndGreet={meetAndGreet} />
+      <LocationSection meetAndGreet={meetAndGreet} />
     </div>
   );
 };
