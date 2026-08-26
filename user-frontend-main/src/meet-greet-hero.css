@@ -370,6 +370,137 @@
     margin:0;
 }
 
+
+.mg-gallery{
+    display:grid;
+    grid-template-columns:180px 1fr;
+    gap:40px;
+    margin-bottom:56px;
+    scroll-margin-top:24px;
+}
+
+.mg-gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));
+    gap:14px;
+}
+
+.mg-gallery-item{
+    aspect-ratio:1;
+    border-radius:12px;
+    overflow:hidden;
+    border:none;
+    padding:0;
+    cursor:pointer;
+    background:var(--bg-alt);
+}
+
+.mg-gallery-item img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:transform .3s ease;
+}
+
+.mg-gallery-item:hover img{
+    transform:scale(1.06);
+}
+
+.mg-lightbox-overlay{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:rgba(8,4,20,0.88);
+    backdrop-filter:blur(6px);
+}
+
+.mg-lightbox-img{
+    max-width:min(880px, 90vw);
+    max-height:85vh;
+    border-radius:12px;
+    box-shadow:0 30px 70px -20px rgba(0,0,0,0.6);
+}
+
+.mg-lightbox-close{
+    position:absolute;
+    top:20px;
+    right:20px;
+    width:38px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.08);
+    color:#fff;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.mg-lightbox-close:hover{
+    background:rgba(255,255,255,0.2);
+}
+
+.mg-lightbox-nav{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:44px;
+    height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.08);
+    color:#fff;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.mg-lightbox-nav:hover{
+    background:rgba(255,255,255,0.2);
+}
+
+.mg-lightbox-nav.prev{ left:20px; }
+.mg-lightbox-nav.next{ right:20px; }
+
+.mg-lightbox-count{
+    position:absolute;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:12.5px;
+    color:rgba(255,255,255,0.7);
+}
+
+@media(max-width:768px){
+
+.mg-gallery{
+    grid-template-columns:1fr;
+    gap:16px;
+}
+
+.mg-gallery-grid{
+    grid-template-columns:repeat(3, 1fr);
+    gap:8px;
+}
+
+.mg-lightbox-nav{
+    width:38px;
+    height:38px;
+}
+
+.mg-lightbox-nav.prev{ left:8px; }
+.mg-lightbox-nav.next{ right:8px; }
+
+}
+
 @media(max-width:900px){
 
 .mg-how-steps{

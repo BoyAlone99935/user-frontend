@@ -5,6 +5,8 @@ import AnchorNav from "../components/Anchornav";
 import AboutSection from "../components/AboutSection";
 import WhatsIncluded from "../components/WhatsIncluded";
 import HowItWorks from "../components/HowItWorks";
+import Navbar from "../components/Navbar";
+import Gallery from "../components/Gallery";
 import "../meet-greet-hero.css";
 
 // assumed mount path, matching your other v1 routers — adjust if different
@@ -62,12 +64,13 @@ const MeetGreetPage = () => {
 
   return (
     <div className="mg-page">
-
+      
       <MeetGreetHero meetAndGreet={meetAndGreet} celebrity={celebrity} />
       <AnchorNav/>
       <AboutSection meetAndGreet={meetAndGreet} />
       <WhatsIncluded meetAndGreet={meetAndGreet} />
       <HowItWorks/>
+      <Gallery meetAndGreet={meetAndGreet} />
     </div>
   );
 };
