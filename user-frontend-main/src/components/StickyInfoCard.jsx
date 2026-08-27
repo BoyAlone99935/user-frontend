@@ -12,6 +12,12 @@ const getTimeRemaining = (targetDate) => {
   };
 };
 
+
+const formatMoney = (amount) => {
+  return Number(amount).toLocaleString("en-US");
+};
+
+
 const StickyInfoCard = ({ meetAndGreet, onReserve }) => {
   const [quantity, setQuantity] = useState(1);
   const [timeLeft, setTimeLeft] = useState(() =>
@@ -47,7 +53,7 @@ const StickyInfoCard = ({ meetAndGreet, onReserve }) => {
         {meetAndGreet.type === "vip" ? "VIP Meet & Greet" : "Meet & Greet"}
       </span>
 
-      <div className="mg-info-price">${meetAndGreet.price}</div>
+      <div className="mg-info-price">${formatMoney(meetAndGreet.price)}</div>
 
       <p className={`mg-info-spots ${isCritical ? "critical" : ""}`}>
         {isFull
