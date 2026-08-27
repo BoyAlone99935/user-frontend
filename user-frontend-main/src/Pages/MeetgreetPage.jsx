@@ -8,6 +8,7 @@ import HowItWorks from "../components/HowItWorks";
 import Navbar from "../components/Navbar";
 import Gallery from "../components/Gallery";
 import LocationSection from "../components/EventLocation";
+import StickyInfoCard from "../components/StickyInfoCard";
 import "../meet-greet-hero.css";
 
 // assumed mount path, matching your other v1 routers — adjust if different
@@ -44,6 +45,10 @@ const MeetGreetPage = () => {
     if (id) fetchMeetAndGreet();
   }, [id]);
 
+  const handlebook = () => {
+     console.log("handle")
+  }
+
   if (loading) {
     return (
       <div className="mg-page-status">
@@ -64,16 +69,22 @@ const MeetGreetPage = () => {
     typeof meetAndGreet.celebrity === "object" ? meetAndGreet.celebrity : null;
 
   return (
-    <div className="mg-page">
-      
-      <MeetGreetHero meetAndGreet={meetAndGreet} celebrity={celebrity} />
-      <AnchorNav/>
-      <AboutSection meetAndGreet={meetAndGreet} />
-      <WhatsIncluded meetAndGreet={meetAndGreet} />
-      <HowItWorks/>
-      <Gallery meetAndGreet={meetAndGreet} />
-      <LocationSection meetAndGreet={meetAndGreet} />
+    <div className="mg-layout">
+      <div className="mg-page">
+        
+        <MeetGreetHero meetAndGreet={meetAndGreet} celebrity={celebrity} />
+        <AnchorNav/>
+        <AboutSection meetAndGreet={meetAndGreet} />
+        <WhatsIncluded meetAndGreet={meetAndGreet} />
+        <HowItWorks/>
+        <Gallery meetAndGreet={meetAndGreet} />
+        <LocationSection meetAndGreet={meetAndGreet} />
+      </div>
+      <aside className="mg-sidebar">
+       <StickyInfoCard meetAndGreet={meetAndGreet} onReserve={handlebook}/>
+     </aside>
     </div>
+      
   );
 };
 
