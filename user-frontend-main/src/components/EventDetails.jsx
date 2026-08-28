@@ -28,25 +28,16 @@ const EventDetails = ({ event }) => {
           <p>{description || "No description available for this event yet."}</p>
         </div>
 
-        <div className="ed-venue-card">
-          <h3>Venue</h3>
+        <div>
+          
 
-          <div className="ed-venue-info">
+          <div>
             <MapPin size={16} />
             <div>
               <LocationSection meetAndGreet={event} />
             </div>
           </div>
 
-          <a
-            href={mapsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="ed-directions-btn"
-          >
-            <Navigation size={15} />
-            Get Directions
-          </a>
         </div>
 
       </div>

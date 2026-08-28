@@ -11,6 +11,7 @@ import LocationSection from "../components/EventLocation";
 import StickyInfoCard from "../components/StickyInfoCard";
 import "../meet-greet-hero.css";
 import FAQSection from "../components/FaqSection";
+import TrustBadgeStrip from "../components/TrustBadgeStrip";
 
 // assumed mount path, matching your other v1 routers — adjust if different
 const API_BASE = "https://fan-platform-backend.onrender.com/api/v1/meet-and-greets";
@@ -70,23 +71,30 @@ const MeetGreetPage = () => {
     typeof meetAndGreet.celebrity === "object" ? meetAndGreet.celebrity : null;
 
   return (
-    <div className="mg-layout">
-      <div className="mg-page">
-        
-        <MeetGreetHero meetAndGreet={meetAndGreet} celebrity={celebrity} />
-        <AnchorNav/>
-        <AboutSection meetAndGreet={meetAndGreet} />
-        <WhatsIncluded meetAndGreet={meetAndGreet} />
-        <HowItWorks/>
-        <Gallery meetAndGreet={meetAndGreet} />
-        <LocationSection meetAndGreet={meetAndGreet} />
-      </div>
-      <aside className="mg-sidebar">
-       <StickyInfoCard meetAndGreet={meetAndGreet} onReserve={handlebook}/>
-     </aside>
-     <FAQSection/>
+    <div className="mg-page">
+
+  <MeetGreetHero meetAndGreet={meetAndGreet} celebrity={celebrity} />
+  <AnchorNav />
+
+  <div className="mg-layout">
+    <div className="mg-main">
+      <AboutSection meetAndGreet={meetAndGreet} />
+      <WhatsIncluded meetAndGreet={meetAndGreet} />
+      <HowItWorks />
+      <Gallery meetAndGreet={meetAndGreet} />
+      <LocationSection meetAndGreet={meetAndGreet} />
     </div>
-      
+
+    <aside className="mg-sidebar">
+      <StickyInfoCard meetAndGreet={meetAndGreet} onReserve={handlebook} />
+    </aside>
+  </div>
+
+  <FAQSection />
+  <TrustBadgeStrip />
+
+</div>
+    
   );
 };
 

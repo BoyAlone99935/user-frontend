@@ -16,6 +16,11 @@ const getStartingPrice = (ticketTypes) => {
   return Math.min(...ticketTypes.map((t) => t.price));
 };
 
+const formatMoney = (amount) => {
+  return Number(amount).toLocaleString("en-US");
+};
+
+
 const MoreFromArtist = ({currentEventId }) => {
   const {celebid} = useParams()
   const navigate = useNavigate();
@@ -86,7 +91,7 @@ const MoreFromArtist = ({currentEventId }) => {
                 </div>
 
                 {startingPrice !== null && !event.isSoldOut ? (
-                  <span className="mfa-card-price">From ${startingPrice}</span>
+                  <span className="mfa-card-price">From ${formatMoney(startingPrice)}</span>
                 ) : (
                   event.isSoldOut && (
                     <span className="mfa-card-soldout">Sold Out</span>

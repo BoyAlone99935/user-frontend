@@ -23,6 +23,10 @@ const getRemaining = (ticketType) => {
   return Math.max(capacity - ticketType.sold, 0);
 };
 
+const formatMoney = (amount) => {
+  return Number(amount).toLocaleString("en-US");
+};
+
 const TicketSelector = ({ event, loading = false }) => {
   const [quantities, setQuantities] = useState({});
   const [sheetExpanded, setSheetExpanded] = useState(false);
@@ -151,7 +155,7 @@ const TicketSelector = ({ event, loading = false }) => {
               </span>
               <span className="ts-summary-item-right">
                 <span className="ts-summary-item-total">
-                  ${qty * ticketType.price}
+                  ${formatMoney(ticketType.price * qty)}
                 </span>
                 <button
                   type="button"
@@ -171,7 +175,7 @@ const TicketSelector = ({ event, loading = false }) => {
 
       <div className="ts-summary-row">
         <span>Subtotal</span>
-        <span>${subtotal}</span>
+        <span>${formatMoney(subtotal)}</span>
       </div>
       <div className="ts-summary-row muted">
         <span>Fees &amp; taxes</span>
@@ -180,11 +184,11 @@ const TicketSelector = ({ event, loading = false }) => {
 
       <div className="ts-summary-total">
         <span>Total</span>
-        <span>${subtotal}</span>
+        <span>${formatMoney(subtotal)}</span>
       </div>
 
       <span className="sr-only" aria-live="polite">
-        {totalQty} ticket{totalQty !== 1 ? "s" : ""} in cart, total ${subtotal}
+        {totalQty} ticket{totalQty !== 1 ? "s" : ""} in cart, total ${formatMoney(subtotal)}
       </span>
 
       <div className="ts-policy-note">
@@ -312,7 +316,7 @@ const TicketSelector = ({ event, loading = false }) => {
                   </div>
 
                   <div className="ts-row-price-block">
-                    <span className="ts-row-price">${tt.price}</span>
+                    <span className="ts-row-price">${formatMoney(tt.price)}</span>
                     <span className="ts-row-price-fees">+ fees</span>
                   </div>
 
