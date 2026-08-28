@@ -10,6 +10,7 @@ import Gallery from "../components/Gallery";
 import LocationSection from "../components/EventLocation";
 import StickyInfoCard from "../components/StickyInfoCard";
 import "../meet-greet-hero.css";
+import FAQSection from "../components/FaqSection";
 
 // assumed mount path, matching your other v1 routers — adjust if different
 const API_BASE = "https://fan-platform-backend.onrender.com/api/v1/meet-and-greets";
@@ -83,6 +84,7 @@ const MeetGreetPage = () => {
       <aside className="mg-sidebar">
        <StickyInfoCard meetAndGreet={meetAndGreet} onReserve={handlebook}/>
      </aside>
+     <FAQSection/>
     </div>
       
   );

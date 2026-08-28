@@ -76,10 +76,10 @@ const StickyInfoCard = ({ meetAndGreet, onReserve }) => {
               −
             </button>
             <span>{quantity}</span>
-            <button
+            <button 
               type="button"
               onClick={() => changeQty(1)}
-              disabled={quantity >= remaining}
+              disabled={quantity >= remaining || quantity >= 1}
               aria-label="Increase quantity"
             >
               +
