@@ -11,6 +11,7 @@ import Policy from '../components/Policy'
 import Loader from '../components/Loader'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
+import Countdown from '../components/CountDown'
 const EventDet = () => {
   const [event , setEvent] = useState([])
   const [loading , setLoading] = useState(true)

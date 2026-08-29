@@ -12,13 +12,14 @@ import StickyInfoCard from "../components/StickyInfoCard";
 import "../meet-greet-hero.css";
 import FAQSection from "../components/FaqSection";
 import TrustBadgeStrip from "../components/TrustBadgeStrip";
+import { useNavigate } from "react-router-dom";
 
 // assumed mount path, matching your other v1 routers — adjust if different
 const API_BASE = "https://fan-platform-backend.onrender.com/api/v1/meet-and-greets";
 
 const MeetGreetPage = () => {
   const { id } = useParams();
-
+  const navigate = useNavigate();
   const [meetAndGreet, setMeetAndGreet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -47,9 +48,15 @@ const MeetGreetPage = () => {
     if (id) fetchMeetAndGreet();
   }, [id]);
 
-  const handlebook = () => {
-     console.log("handle")
-  }
+  const handleReserve = (quantity) => {
+  navigate("/checkout", {
+    state: {
+      purchaseType: "meetAndGreet",
+      meetAndGreet,
+      quantity,
+    },
+  });
+};
 
   if (loading) {
     return (
@@ -86,7 +93,7 @@ const MeetGreetPage = () => {
     </div>
 
     <aside className="mg-sidebar">
-      <StickyInfoCard meetAndGreet={meetAndGreet} onReserve={handlebook} />
+      <StickyInfoCard meetAndGreet={meetAndGreet} onReserve={handleReserve} />
     </aside>
   </div>
 

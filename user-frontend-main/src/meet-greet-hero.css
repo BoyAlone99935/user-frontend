@@ -613,6 +613,7 @@
     border-radius:16px;
     padding:24px;
     background:var(--bg);
+    margin-bottom: 2rem;
 }
 
 .mg-info-type{

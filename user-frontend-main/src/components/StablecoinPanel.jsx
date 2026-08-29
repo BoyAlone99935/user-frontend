@@ -56,7 +56,16 @@ const NETWORKS = [
 ];
 
 // stage machine: "networks" -> "generating" -> "address" -> "txid" -> "confirming"
-const StablecoinPanel = ({ amount, event, selectedItems, onConfirm, onVerify }) => {
+const StablecoinPanel = ({
+  amount,
+  event,
+  selectedItems,
+  purchaseType,
+  meetAndGreet,
+  quantity,
+  onConfirm,
+  onVerify,
+}) => {
   const [stage, setStage] = useState("networks");
   const [network, setNetwork] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -91,7 +100,11 @@ const StablecoinPanel = ({ amount, event, selectedItems, onConfirm, onVerify }) 
           address: network.address,
           txId,
           amount,
+          purchaseType,
+          meetAndGreet,
+          quantity,
           selectedItems,
+          event,
         });
       } else {
         // no onVerify wired up yet — placeholder so this is still testable
@@ -115,24 +128,59 @@ const StablecoinPanel = ({ amount, event, selectedItems, onConfirm, onVerify }) 
 
   const handlePaid = async () => {
     setError("");
-    setStage("comfirming");
-    setLoading(true)
+    setStage("confirming");
+    setLoading(true);
 
     try {
-      // one request per ticket type, since create-ticket only accepts a
-      // single ticketId + quantity per call
+      // Same endpoint and same payment flow.
+      // Meet & Greet sends its own data through the existing endpoint.
+      if (purchaseType === "meetAndGreet") {
+        const res = await fetch(`${TICKETS_API_BASE}/create-ticket`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            bookingType: "meet_and_greet",
+            meetId: meetAndGreet._id,
+            quantity,
+            paymentType: "usdt",
+            arrangedPayment: false,
+            transactionId: txId,
+            network: network.id,
+            amount,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(
+            data.message ||
+              "Failed to create your Meet & Greet reservation."
+          );
+        }
+
+        setLoading(false);
+        onConfirm();
+        return;
+      }
+
+      // Existing event-ticket flow remains unchanged.
       for (const item of selectedItems) {
         const res = await fetch(`${TICKETS_API_BASE}/create-ticket`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include", // sends the auth cookie automatically
+          credentials: "include",
           body: JSON.stringify({
             bookingType: "event",
             eventId: event._id,
             ticketId: item.ticketType._id,
             quantity: item.qty,
-            paymentType: "usdt", // matches Ticket schema enum exactly
+            paymentType: "usdt",
             arrangedPayment: false,
+            transactionId: txId,
+            network: network.id,
+            amount,
           }),
         });
 
@@ -145,13 +193,16 @@ const StablecoinPanel = ({ amount, event, selectedItems, onConfirm, onVerify }) 
           );
         }
       }
-      setLoading(false)
+
+      setLoading(false);
       onConfirm();
     } catch (err) {
-      setError(err.message || "Something went wrong creating your tickets.");
-      setLoading(false)
-    } finally {
-      setSubmitting(false);
+      setError(
+        err.message ||
+          "Something went wrong processing your payment."
+      );
+      setLoading(false);
+      setStage("txid");
     }
   };
 
