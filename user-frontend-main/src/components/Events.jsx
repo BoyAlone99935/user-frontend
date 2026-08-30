@@ -74,7 +74,7 @@ const Events = () => {
           </div>
         ) : (
           events
-            .slice(0, 3)
+            .slice(0, 10)
             .map((event) => (
               <EventCard
                 key={event._id}

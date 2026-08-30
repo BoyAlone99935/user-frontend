@@ -574,17 +574,30 @@ export default function CheckoutFlow() {
 />
           )}
 
+
+
           {selectedMethod === "arrange" && (
-            <div className={styles.card}>
-              <p className={styles.fieldsNote}>
-                Chat with our support team to arrange payment for this order. We'll confirm your
-                tickets once payment is verified.
-              </p>
-              <button type="button" className={styles.payBtn} onClick={handleBankConfirm}>
-                <Headphones size={14} /> Contact Support
-              </button>
-            </div>
-          )}
+  <div className={styles.card}>
+    <p className={styles.fieldsNote}>
+      Chat with our support team to arrange payment for this order.
+      We'll confirm your tickets once payment is verified.
+    </p>
+
+    <button
+      type="button"
+      className={styles.payBtn}
+      onClick={() => {
+        console.log("tawk to opening")
+        if (window.Tawk_API) {
+          window.Tawk_API.maximize();
+        }
+      }}
+    >
+      <Headphones size={14} />
+      Contact Support
+    </button>
+  </div>
+)}
 
           <p className={styles.secureNote}>
             <Lock size={12} /> Your payment is secure and encrypted
