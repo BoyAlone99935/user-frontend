@@ -2095,6 +2095,75 @@
    RESPONSIVE
 ======================================== */
 
+
+.cf-faq{
+    width:100%;
+    max-width:1180px;
+    margin:0 auto;
+    padding:60px 32px 90px;
+}
+
+.cf-faq h2{
+    font-weight:700;
+    font-size:20px;
+    color:var(--text);
+    margin:0 0 24px;
+}
+
+.cf-faq-list{
+    max-width:700px;
+    border-top:1px solid var(--border);
+}
+
+.cf-faq-item{
+    border-bottom:1px solid var(--border);
+}
+
+.cf-faq-question{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:18px 0;
+    background:none;
+    border:none;
+    text-align:left;
+    font-size:15px;
+    font-weight:600;
+    color:var(--text);
+    cursor:pointer;
+}
+
+.cf-faq-chevron{
+    flex-shrink:0;
+    color:var(--text-muted);
+    transition:transform .2s ease;
+}
+
+.cf-faq-item.open .cf-faq-chevron{
+    transform:rotate(180deg);
+    color:var(--purple-700);
+}
+
+.cf-faq-answer{
+    font-size:14px;
+    line-height:1.75;
+    color:var(--text-muted);
+    margin:0 0 20px;
+    padding-right:32px;
+}
+
+@media(max-width:640px){
+
+.cf-faq{
+    padding:44px 20px 60px;
+}
+
+}
+
+
+
 @media(max-width:900px){
     .site-footer{
         padding:52px 20px 24px;
