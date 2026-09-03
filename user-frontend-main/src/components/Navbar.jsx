@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { HiOutlineMenuAlt3, HiOutlineX } from "react-icons/hi";
 import { useAuth } from "./AuthContext";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -39,6 +40,9 @@ const Navbar = () => {
             <li><a href="#meet">Meet & Greet</a></li>
             <li><a href="#vip">VIP Meet & Greet</a></li>
             <li><a href="#viewed">Fans Also Viewed</a></li>
+            <li>
+              <Link to="/my-tickets">My Tickets</Link>
+            </li>
           </ul>
 
           <div className="nav-actions">
