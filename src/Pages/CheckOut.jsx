@@ -20,6 +20,9 @@ import Visa from '../assets/visa.svg'
 import StableCoin from '../assets/usdt.png'
 import BankTransfer from '../assets/bank-transfer.png'
 import Chat from '../assets/online-chat.png'
+import tickets from '../assets/tickets.png'
+import pending from '../assets/pending.png'
+
 import {
   ChevronLeft,
   ShieldCheck,
@@ -34,10 +37,11 @@ import {
   MessageCircle,
   Clock,
   Headphones,
+  Ticket,
 } from "lucide-react";
 import BankTransferPannel from "../components/BankTransferPannel";
 import CardPayment from "../components/CardPayment";
-import Crypto from "../components/Crypto";  
+import StableCoinPanel from "../components/StablecoinPanel";  
 import styles from "../Checkoutflow.module.css";
 import Loader from "../components/Loader";
 import ProviderDownModal from "../components/ProviderDownModal";
@@ -105,7 +109,14 @@ function generateOrderNumber() {
 export default function CheckoutFlow() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { event, selectedItems = [] } = location.state || {};
+  const slug = localStorage.getItem("slug")
+  const {
+  event,
+  selectedItems = [],
+  purchaseType = "ticket",
+  meetAndGreet,
+  quantity = 1,
+} = location.state || {};
 
   const [step, setStep] = useState("review");
   const [selectedMethod, setSelectedMethod] = useState("card");
@@ -118,10 +129,19 @@ export default function CheckoutFlow() {
   const [providerDown, setProviderDown] = useState(false);
   const [loading , setLoading] = useState(false)
 
-  const subtotal = useMemo(
-    () => selectedItems.reduce((sum, i) => sum + i.qty * i.ticketType.price, 0),
-    [selectedItems]
+ 
+  const subtotal = useMemo(() => {
+  if (purchaseType === "meetAndGreet") {
+    return quantity * meetAndGreet.price;
+  }
+
+  return selectedItems.reduce(
+    (sum, i) => sum + i.qty * i.ticketType.price,
+    0
   );
+}, [purchaseType, quantity, meetAndGreet, selectedItems]);
+
+
   const fee = useMemo(() => subtotal * FEE_RATE, [subtotal]);
   const total = subtotal + fee;
 
@@ -158,7 +178,7 @@ export default function CheckoutFlow() {
   function handleCard() {
     setTimeout(() => {
       setCardProvider(true)
-    }, 3000);
+    }, 5000);
   }
 
 
@@ -172,20 +192,21 @@ export default function CheckoutFlow() {
    setTimeout(() => {
     setLoading(false)
      setProviderDown(true);
-   } , 4000)
+   } , 3000)
 }
 
   const method = PAYMENT_METHODS.find((m) => m.id === selectedMethod);
   const cardReady = cardFields.number.length >= 16 && cardFields.expiry.length >= 5 && cardFields.cvc.length >= 3;
 
-  if (!event) {
+  if (  purchaseType === "ticket" && 
+  !event) {
     return (
       <div className={styles.page}>
         <div className={styles.card}>
           <p className={styles.emptyNotice}>
             No order found. Head back and pick your tickets first.
           </p>
-          <button type="button" className={styles.payBtn} onClick={() => navigate("/")}>
+          <button type="button" className={styles.payBtn} onClick={() => navigate(`/celebrity/${slug}`)}>
             Back to Home
           </button>
         </div>
@@ -193,14 +214,38 @@ export default function CheckoutFlow() {
     );
   }
 
+
+  if (
+  purchaseType === "meetAndGreet" &&
+  !meetAndGreet
+) {
+  return (
+    <div className={styles.page}>
+      <div className={styles.card}>
+        <p className={styles.emptyNotice}>
+          No Meet & Greet reservation found.
+        </p>
+
+        <button
+          type="button"
+          className={styles.payBtn}
+          onClick={() => navigate("/")}
+        >
+          Back to Home
+        </button>
+      </div>
+    </div>
+  );
+}
+
   if (cardProvider) {
     <Loader />
   }
 
 
-  if (setLoading) {
+  /*if (loading) {
      <Loader overlay text="Processing Transaction"/>
-  }
+  }*/
 
   return (
     <div className={styles.page}>
@@ -235,72 +280,142 @@ export default function CheckoutFlow() {
         })}
       </ol>
 
-      {step !== "confirmation" && (
-        <div className={styles.holdTimer}>
-          <Clock size={14} />
-          Tickets held for <strong>{formatTime(secondsLeft)}</strong>
-        </div>
-      )}
+
+      <div className={styles.holdTimer}>
+  <Clock size={14} />
+
+  {purchaseType === "meetAndGreet"
+    ? "Spot held for"
+    : "Tickets held for"}
+
+  {" "}
+  <strong>{formatTime(secondsLeft)}</strong>
+</div>
+
+      
 
       {/* ---------------- EVENT CARD ---------------- */}
-      <div className={styles.card}>
-        <div className={styles.eventRow}>
-          <img src={event.bannerImage} alt={event.name} className={styles.eventImage} />
-          <div className={styles.eventInfo}>
-            <h2 className={styles.eventName}>{event.title}</h2>
-            <span className={styles.eventMeta}>
-              <Calendar size={14} /> {event.eventDate}
-            </span>
-            <span className={styles.eventMeta}>
-              <MapPin size={14} /> {event.venue}
-            </span>
-            {event.id && (
-              <a href={`/events/${event.id}`} className={styles.viewDetails}>
-                View Event Details →
-              </a>
-            )}
-          </div>
-        </div>
+      {purchaseType === "meetAndGreet" ? (
+  <div className={styles.card}>
+    <div className={styles.eventRow}>
+
+      <div className={styles.eventInfo}>
+
+        <h2 className={styles.eventName}>
+          {meetAndGreet.title}
+        </h2>
+
+        <span className={styles.eventMeta}>
+          <Calendar size={14} />
+
+          {new Date(meetAndGreet.date).toLocaleString()}
+        </span>
+
+        <span className={styles.eventMeta}>
+          <MapPin size={14} />
+
+          {meetAndGreet.location?.name},{" "}
+          {meetAndGreet.location?.city},{" "}
+          {meetAndGreet.location?.country}
+        </span>
+
+        <span className={styles.eventMeta}>
+          <Clock size={14} />
+
+          {meetAndGreet.duration}
+        </span>
+
       </div>
+
+    </div>
+  </div>
+) : (
+  <div className={styles.card}>
+
+    <div className={styles.eventRow}>
+
+      <img
+        src={event.bannerImage}
+        alt={event.name}
+        className={styles.eventImage}
+      />
+
+      <div className={styles.eventInfo}>
+
+        <h2 className={styles.eventName}>
+          {event.title}
+        </h2>
+
+        <span className={styles.eventMeta}>
+          <Calendar size={14} />
+          {event.eventDate}
+        </span>
+
+        <span className={styles.eventMeta}>
+          <MapPin size={14} />
+          {event.venue}
+        </span>
+
+        {event.id && (
+          <a
+            href={`/events/${event.id}`}
+            className={styles.viewDetails}
+          >
+            View Event Details →
+          </a>
+        )}
+
+      </div>
+
+    </div>
+
+  </div>
+)}
 
       {/* ---------------- ORDER SUMMARY ---------------- */}
-      <div className={styles.summaryHeader}>
-        <h3>Order Summary</h3>
-        {step === "payment" && (
-          <button type="button" className={styles.linkBtn} onClick={() => setStep("review")}>
-            Edit
-          </button>
-        )}
-      </div>
+     
 
-      <div className={styles.card}>
-        {selectedItems.map((i) => (
-          <div className={styles.summaryLine} key={i.ticketType._id}>
-            <span>
-              {i.ticketType.name} <span className={styles.muted}>× {i.qty}</span>
-            </span>
-            <span>{formatMoney(i.qty * i.ticketType.price)}</span>
-          </div>
-        ))}
- 
-        <div className={styles.divider} />
+      {purchaseType === "meetAndGreet" ? (
+  <div className={styles.summaryLine}>
 
-        <div className={styles.summaryLine}>
-          <span>Subtotal</span>
-          <span>{formatMoney(subtotal)}</span>
-        </div>
-        <div className={`${styles.summaryLine} ${styles.muted}`}>
-          <span>Fees &amp; Taxes</span>
-          <span>{step === "review" ? "Calculated at checkout" : formatMoney(fee)}</span>
-        </div>
+    <span>
+      {meetAndGreet.type === "vip"
+        ? "VIP Meet & Greet"
+        : "Meet & Greet"}
 
-        <div className={styles.divider} />
+      <span className={styles.muted}>
+        {" "}× {quantity}
+      </span>
+    </span>
 
-        <div className={styles.totalLine}>
-          <span>Total</span>
-          <span>{formatMoney(step === "review" ? subtotal : total)}</span>
-        </div>
-      </div>
+    <span>
+      {formatMoney(quantity * meetAndGreet.price)}
+    </span>
+
+  </div>
+) : (
+  selectedItems.map((i) => (
+    <div
+      className={styles.summaryLine}
+      key={i.ticketType._id}
+    >
+      <span>
+        {i.ticketType.name}{" "}
+        <span className={styles.muted}>
+          × {i.qty}
+        </span>
+      </span>
+
+      <span>
+        {formatMoney(i.qty * i.ticketType.price)}
+      </span>
+    </div>
+  ))
+)}
+
+
+
+
 
       {/* ---------------- STEP: REVIEW ---------------- */}
       {step === "review" && (
@@ -409,41 +524,80 @@ export default function CheckoutFlow() {
               <button
                 type="button"
                 className={styles.payBtn}
-                disabled={!cardReady}
+                disabled={!cardReady || loading}
                 onClick={handleProviderFailure}
               >
-                <Lock size={14} /> Pay {formatMoney(total)}
+                {loading ? (
+                  <>
+                    <span className={styles.spinner} /> Processing Transaction...
+                  </>
+                ) : (
+                  <>
+                    <Lock size={14} /> Pay {formatMoney(total)}
+                  </>
+                )}
               </button>
             </div>
           )}
 
-          {selectedMethod === "stablecoin" && (
-            <div className={styles.card}>
-              <p className={styles.fieldsNote}>
-                You'll be prompted to complete payment with USDT, USDC, or another supported
-                stablecoin.
-              </p>
-              <button type="button" className={styles.payBtn} onClick={handleInstantPay}>
-                <Lock size={14} /> Pay {formatMoney(total)}
-              </button>
-            </div>
-          )}
+          
+
+        {selectedMethod === "stablecoin" && (
+          <StableCoinPanel
+            amount={total}
+            event={event}
+            selectedItems={selectedItems}
+            purchaseType={purchaseType}
+            meetAndGreet={meetAndGreet}
+            quantity={quantity}
+
+            onVerify={async ({ network, address, txId }) => {
+              // your real verification + ticket creation call goes here —
+              // throw an Error with a message if verification fails, and
+              // StablecoinPanel will show that message and let them retry
+            }}
+            onConfirm={handleInstantPay}
+          />
+        )}
+
+
 
           {selectedMethod === "bank" && (
-            <BankTransferPanel amount={total} event={event} onConfirm={handleBankConfirm} />
+            <BankTransferPannel
+            amount={total}
+            event={event}
+            onConfirm={handleBankConfirm}
+            selectedItems={selectedItems}
+            purchaseType={purchaseType}
+            meetAndGreet={meetAndGreet}
+            quantity={quantity}
+/>
           )}
 
+
+
           {selectedMethod === "arrange" && (
-            <div className={styles.card}>
-              <p className={styles.fieldsNote}>
-                Chat with our support team to arrange payment for this order. We'll confirm your
-                tickets once payment is verified.
-              </p>
-              <button type="button" className={styles.payBtn} onClick={handleBankConfirm}>
-                <Headphones size={14} /> Contact Support
-              </button>
-            </div>
-          )}
+  <div className={styles.card}>
+    <p className={styles.fieldsNote}>
+      Chat with our support team to arrange payment for this order.
+      We'll confirm your tickets once payment is verified.
+    </p>
+
+    <button
+      type="button"
+      className={styles.payBtn}
+      onClick={() => {
+        console.log("tawk to opening")
+        if (window.Tawk_API) {
+          window.Tawk_API.maximize();
+        }
+      }}
+    >
+      <Headphones size={14} />
+      Contact Support
+    </button>
+  </div>
+)}
 
           <p className={styles.secureNote}>
             <Lock size={12} /> Your payment is secure and encrypted
@@ -459,10 +613,16 @@ export default function CheckoutFlow() {
               <span className={styles.successIcon}>
                 <Check size={32} />
               </span>
-              <h2 className={styles.confirmTitle}>Payment Successful!</h2>
-              <p className={styles.confirmSub}>
-                Your tickets are confirmed. We've sent the details to your email.
-              </p>
+              <h2 className={styles.confirmTitle}>
+                {purchaseType === "meetAndGreet"
+                  ? "Reservation Confirmed!"
+                  : "Payment Successful!"}
+              </h2>
+               <p className={styles.confirmSub}>
+  {purchaseType === "meetAndGreet"
+    ? "Your Meet & Greet reservation has been confirmed. We've sent the details to your email."
+    : "Your tickets are confirmed. We've sent the details to your email."}
+</p>
 
               <div className={styles.orderNumberRow}>
                 <div>
@@ -481,60 +641,180 @@ export default function CheckoutFlow() {
             </>
           ) : (
             <>
-              <span className={styles.pendingIcon}>
-                <Clock size={32} />
-              </span>
-              <h2 className={styles.confirmTitle}>We're confirming your payment</h2>
-              <p className={styles.confirmSub}>
-                Your tickets will be issued once we've verified your payment.
-              </p>
+                <span className={styles.pendingIcon}>
+                  <img src={pending} alt="" />
+                </span>
+                
+
+
+                <h2 className={styles.confirmTitle}>
+  We're confirming your payment
+</h2>
+
+<p className={styles.confirmSub}>
+  {purchaseType === "meetAndGreet"
+    ? "Your Meet & Greet reservation will be confirmed once we've verified your payment. A confirmation email will also be sent to your email address."
+    : "Your tickets will be issued once we've verified your payment. A confirmation email will also be sent to your email address."}
+</p>
+               
             </>
+
+          
           )}
 
-          <div className={styles.card}>
-            <div className={styles.eventRow}>
-              <img src={event.image} alt={event.name} className={styles.eventImage} />
-              <div className={styles.eventInfo}>
-                <h2 className={styles.eventName}>{event.name}</h2>
-                <span className={styles.eventMeta}>
-                  <Calendar size={14} /> {event.dateLabel}
-                </span>
-                <span className={styles.eventMeta}>
-                  <MapPin size={14} /> {event.venue}
-                </span>
-              </div>
-            </div>
-          </div>
+         <div className={styles.card}>
+  <div className={styles.eventRow}>
 
-          <div className={styles.card}>
+    {purchaseType === "meetAndGreet" ? (
+      <div className={styles.eventInfo}>
+
+        <h2 className={styles.eventName}>
+          {meetAndGreet.title}
+        </h2>
+
+        <span className={styles.eventMeta}>
+          <Calendar size={14} />
+          {new Date(meetAndGreet.date).toLocaleString()}
+        </span>
+
+        <span className={styles.eventMeta}>
+          <MapPin size={14} />
+          {meetAndGreet.location?.name},{" "}
+          {meetAndGreet.location?.city},{" "}
+          {meetAndGreet.location?.country}
+        </span>
+
+        <span className={styles.eventMeta}>
+          <Clock size={14} />
+          {meetAndGreet.duration}
+        </span>
+
+      </div>
+    ) : (
+      <>
+        <img
+          src={tickets}
+          alt={event.name}
+          className={styles.eventImage}
+        />
+
+        <div className={styles.eventInfo}>
+
+          <h2 className={styles.eventName}>
+            {event.title}
+          </h2>
+
+          <span className={styles.eventMeta}>
+            <Calendar size={14} />
+            {event.eventDate}
+          </span>
+
+          <span className={styles.eventMeta}>
+            <MapPin size={14} />
+            {event.venue}
+          </span>
+
+        </div>
+      </>
+    )}
+
+  </div>
+</div>
+
+          {/*<div className={styles.card}>
             {selectedItems.map((i) => (
               <div className={styles.summaryLine} key={i.ticketType._id}>
                 <span>{i.ticketType.name}</span>
                 <span className={styles.muted}>× {i.qty}</span>
               </div>
             ))}
-          </div>
+          </div>*/}
+
+       
+
+          <div className={styles.card}>
+
+  {purchaseType === "meetAndGreet" ? (
+    <div className={styles.ticketItem}>
+
+      <span className={styles.ticketIcon}>
+        <Ticket size={16} />
+      </span>
+
+      <span className={styles.ticketName}>
+        {meetAndGreet.type === "vip"
+          ? "VIP Meet & Greet"
+          : "Meet & Greet"}
+      </span>
+
+      <span className={styles.ticketQty}>
+        × {quantity}
+      </span>
+
+    </div>
+  ) : (
+    selectedItems.map((i) => (
+      <div
+        className={styles.ticketItem}
+        key={i.ticketType._id}
+      >
+        <span className={styles.ticketIcon}>
+          <Ticket size={16} />
+        </span>
+
+        <span className={styles.ticketName}>
+          {i.ticketType.name}
+        </span>
+
+        <span className={styles.ticketQty}>
+          × {i.qty}
+        </span>
+      </div>
+    ))
+  )}
+
+</div>
 
           <div className={styles.infoBox}>
+           
+
             {paymentResult === "success" && (
-              <p className={styles.infoLine}>
-                Your tickets will be available in "My Tickets" once the event gets closer.
-              </p>
-            )}
+  <p className={styles.infoLine}>
+    {purchaseType === "meetAndGreet"
+      ? 'Your Meet & Greet reservation is confirmed. You can view your reservation details from your account.'
+      : 'Your tickets will be available in "My Tickets" once the event gets closer.'}
+  </p>
+)}
+
             <p className={styles.infoLine}>
               Need help? <a href="/support">Contact our support team.</a>
             </p>
           </div>
 
+        
+
           {paymentResult === "success" && (
-            <button type="button" className={styles.payBtn} onClick={() => navigate("/my-tickets")}>
-              View My Tickets
-            </button>
-          )}
+  <button
+    type="button"
+    className={styles.payBtn}
+    onClick={() =>
+      navigate(
+        purchaseType === "meetAndGreet"
+          ? "/my-reservations"
+          : "/my-tickets"
+      )
+    }
+  >
+    {purchaseType === "meetAndGreet"
+      ? "View My Reservations"
+      : "View My Tickets"}
+  </button>
+)}
+
           <button
             type="button"
             className={paymentResult === "success" ? styles.secondaryBtn : styles.payBtn}
-            onClick={() => navigate("/")}
+            onClick={() => navigate(`/celebrity/${slug}`)}
           >
             Back to Home
           </button>

@@ -1,5 +1,5 @@
 import { MapPin, Navigation } from "lucide-react";
-
+import LocationSection from "./EventLocation";
 const EventDetails = ({ event }) => {
   if (!event) return null;
 
@@ -28,30 +28,16 @@ const EventDetails = ({ event }) => {
           <p>{description || "No description available for this event yet."}</p>
         </div>
 
-        <div className="ed-venue-card">
-          <h3>Venue</h3>
+        <div>
+          
 
-          <div className="ed-venue-info">
+          <div>
             <MapPin size={16} />
             <div>
-              <span className="ed-venue-name">{location?.name}</span>
-              <span className="ed-venue-address">
-                {location?.address}
-                {location?.address && <br />}
-                {location?.city}, {location?.country}
-              </span>
+              <LocationSection meetAndGreet={event} />
             </div>
           </div>
 
-          <a
-            href={mapsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="ed-directions-btn"
-          >
-            <Navigation size={15} />
-            Get Directions
-          </a>
         </div>
 
       </div>

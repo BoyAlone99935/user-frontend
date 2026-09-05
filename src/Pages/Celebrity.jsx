@@ -7,12 +7,16 @@ import MeetAndGreet from "../components/MeetAndGreet";
 import BookMeetAndGreetPitch from "../components/Bookmeetandgreetpitch";
 import AboutCelebrity from "../components/AboutCelebrity";
 import LivePerformances from "../components/LivePerformances";
+import CelebrityFaq from "../components/CelebrityFaq";
 import FansAlsoViewed from "../components/FanAlsoViewed";
 import Footer from "../components/Footer";
+
 const Celebrity = () => {
   const { slug } = useParams();
   const [celebrity, setCelebrity] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  localStorage.setItem("slug" , slug)
 
   useEffect(() => {
     const fetchCelebrity = async () => {
@@ -82,6 +86,7 @@ const Celebrity = () => {
         videos={celebrity.performanceVideos}
         celebrityName={celebrity.name}
       />
+      <CelebrityFaq faqs={celebrity.faq} />
       <FansAlsoViewed currentSlug={slug} />
       <Footer/>
     </div>

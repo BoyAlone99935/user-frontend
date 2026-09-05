@@ -7,6 +7,9 @@ import EventList from "./Pages/EventList";
 import EventDet from './Pages/EventDet'
 import CheckoutFlow from "./Pages/CheckOut";
 import AuthPage from "./Pages/Auth";
+import MeetGreetPage from "./Pages/MeetgreetPage";
+import MyTicketsPage from "./components/MyTickets";
+import Purchase from "../../src/components/Purchase";
 function App() {
  
   return (
@@ -31,6 +34,20 @@ function App() {
         path="/auth"
         element={<AuthPage/>}
       />
+      
+      <Route
+        path="/celebrity/:slug/meet-and-greets/:id"
+        element={<MeetGreetPage/>}
+      />
+
+      <Route
+        path="/my-tickets"
+        element={<MyTicketsPage/>}
+      />
+      
+
+      <Route path="/my-tickets/:purchaseId" element={<Purchase />} />
+      
     </Routes>
   )
 }

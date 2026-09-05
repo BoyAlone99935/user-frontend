@@ -11,6 +11,8 @@ import Policy from '../components/Policy'
 import Loader from '../components/Loader'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
+import Countdown from '../components/CountDown'
+import EventFAQ from '../components/EventFaq'
 const EventDet = () => {
   const [event , setEvent] = useState([])
   const [loading , setLoading] = useState(true)
@@ -49,6 +51,7 @@ const EventDet = () => {
       <EventHero event = {event}/>
       <TicketSelector event = {event} onCheckout={handleCheckout}/>
       <EventDetails event = {event}/>
+      <EventFAQ event = {event}/>
       {/* <Policy /> */}
       <MoreFromArtist currentEventId={id}/>
       <CookieConsent/>
